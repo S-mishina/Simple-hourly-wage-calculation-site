@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+{% block content %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
+<div class="jumbotron">
+<h1>簡易給与計算ツール</h1>
+</div>
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+  <ul class="nav navbar-nav">
+    <li><a class="nav-item nav-link" href="/logout">ログアウト</a></li>
+  <li><a class="nav-item nav-link" href="/">簡易的な給与チェック</a></li>
+  <li><a class="nav-item nav-link" href="/kiroku">勤怠記録</a></li>
+  <li><a class="nav-item nav-link" href="/kinmu">勤務場所登録</a></li>
+</ul>
+</nav>
+<br><br>
+<center>
+<img src="img/main.jpg" class="img-fluid">
+<br><br><br><br>
+<h2>勤務場所の入力</h2>
+</p>
+<br>
+<div class="mb-3">
+<form action="/kinmu" method="POST" enctype="multipart/form-data">
+  <p>勤務場所の入力</p>
+  <input type="text"  class="form-control" name="kinmu">
+  <p>時給入力</p>
+  <input type="int"  class="form-control" name="money">
+	<input type="submit"  class="form-control" value="送信">
+</form>
+</div>
+{% endblock %}
