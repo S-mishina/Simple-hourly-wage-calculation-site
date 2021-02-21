@@ -98,9 +98,37 @@ def keisan(kinmuti,kadou1):
     return zikyu
 
 def keisan1(kadou1,zilyu1):
+    print(kadou1)
+    if kadou1 >=9:
+        kadou1 = kadou1 - 1.0
+        print(kadou1)
+    elif kadou1 >=6:
+        kadou1 = kadou1 - 0.45
     kin=kadou1*zilyu1
     print(kin)
     return kin
+
+def limit10():
+    db=con()
+    db.ping(reconnect=True)
+    cur = db.cursor()
+    sql = "select day,iri,owari from kiroku limit 30"
+    cur.execute(sql)
+    limit = cur.fetchall()
+    cur.close()
+    db.close()
+    return limit
+
+def instartk(hiduke,kilyuyo,kinmu):
+    db=con()
+    db.ping(reconnect=True)
+    cur = db.cursor()
+    sql = "INSERT INTO salary (day,kinmuti,salary) VALUES (%s, %s, %s)"
+    cur.execute(sql, (hiduke,kinmu,kilyuyo))
+    db.commit()
+    cur.close()
+    db.close()
+
 
 @app.route('/')
 def main():
@@ -120,7 +148,8 @@ def kiroku():
     if not session.get('logged_in'):
         return render_template('login.html',title='ログイン画面')
     else:
-        return render_template('check.html', title='勤怠記録')
+        limit=limit10()
+        return render_template('check.html', title='勤怠記録',limit=limit)
 
 @app.route('/kiroku', methods=['POST'])
 def KirokuPost():
@@ -131,9 +160,9 @@ def KirokuPost():
     instartkiroku(hiduke,iri,owari)
     kadou1=kadou(iri,owari)
     zilyu1=keisan(kinmu,kadou1)
-    keisan1(kadou1,zilyu1)
-
-    return render_template('check.html', title='勤怠記録')
+    kilyuyo=keisan1(kadou1,zilyu1)
+    instartk(hiduke,kilyuyo,kinmu)
+    return kiroku()
 
 @app.route('/kinmu')
 def kinmu():
@@ -158,11 +187,6 @@ def KinmuPost():
 def login():
     return render_template('login.html',title='ログイン画面')
 
-@app.route('/logout')  
-def logout():
-    session['logged_in'] = False
-    return render_template('login.html',title='ログイン画面')
-
 @app.route('/login', methods=['POST'])
 def login1():
     users  = request.form['id']
@@ -170,12 +194,13 @@ def login1():
     userlogin(users,pass1)
     return render_template('login.html',title='ログイン画面')
 
-@app.route('/test') 
-def test():
-    if not session.get('logged_in'):
-        return render_template('login.html',title='ログイン画面')
-    else:
-        return render_template('main.html',title='ログイン画面')
+@app.route('/logout')  
+def logout():
+    session['logged_in'] = False
+    return render_template('login.html',title='ログイン画面')
+
+
+
 
 
 if __name__ == "__main__":

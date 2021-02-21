@@ -10,12 +10,17 @@
   <li><a class="nav-item nav-link" href="/">簡易的な給与チェック</a></li>
   <li><a class="nav-item nav-link" href="/kiroku">勤怠記録</a></li>
   <li><a class="nav-item nav-link" href="/kinmu">勤務場所登録</a></li>
+  <li><a class="nav-item nav-link" href="/">給与表示</a></li>
 </ul>
 </nav>
 <br><br>
 <center>
 <img src="img/main.jpg" class="img-fluid">
-<br><br><br><br>
+<br><br>
+<h2>直近31件の記録</h2>
+<br>
+{% for limit in limit %}日付:{{limit.day}} 入り時間:{{limit.iri}} 終わり時間:{{limit.owari}}<br>{% endfor %}
+<br><br>
 <h2>勤怠情報の記録</h2>
 </p>
 <br>
